@@ -1,0 +1,630 @@
+Question 1 - Array of Strings
+
+-------------------------------------------------
+
+
+package hotelprogrammecwq1;
+
+
+    import java.io.BufferedReader;
+    import java.io.File;
+    import java.io.FileNotFoundException;
+    import java.io.FileReader;
+    import java.io.IOException;
+    import java.io.PrintWriter;
+    import java.util.Arrays;
+    import java.util.Collections;
+    import java.util.Scanner;
+    import java.util.logging.Level;
+    import java.util.logging.Logger;
+
+
+    public class HotelProgrammeCWQ1 {
+
+     
+        static int roomNo=0;
+       private static String cust="";
+       private static String[] custarray=new String[10];
+
+        public static void main(String[] args) {
+            Scanner sc =new Scanner(System.in);
+            String process="";
+
+            init(custarray);
+
+            
+            do{
+        System.out.println("           * WELCOME TO HOTEL COURSE WORK *     ");
+        System.out.println("=====================================================");
+        System.out.println("");
+        System.out.println(">> Menu options << (Enter the letters to proceed)");
+        System.out.println("------------------");
+        System.out.println("A - Add customer to hotel database");
+        System.out.println("V - View all rooms");
+        System.out.println("E - View empty rooms");
+        System.out.println("D - Delete customer from room");
+        System.out.println("F - Find room by customer name");
+        System.out.println("S - Store program data in to a file");
+        System.out.println("L - Load program data from the file");
+        System.out.println("O - View rooms in ordered alphabetical name of customers");
+        System.out.println("X - Exit from the application");
+        System.out.println("-------------------------------------------------------------------");
+        System.out.println("*Use cappital letters to enter the process*");
+        System.out.print("Enter the process: ");
+        process=sc.nextLine();
+        System.out.println("------------------------------------");
+        System.out.println("");
+
+            switch(process){
+         
+            case "A":addCust();
+            break;
+            
+            
+          
+            case "V":viewAllRooms();
+            break;
+            
+            
+         
+            case "D":deleteCustomerFromRoom();
+            break;
+            
+         
+            case "E":DisplayEmptyRooms();
+            break;
+            
+          
+            case "F":findRoomCustName();
+            break;
+            
+          
+           
+            case "S":
+                try{
+                storeProgrammData();}
+              catch (FileNotFoundException ex) {
+                   System.out.println("Storing is uncompleted");
+                     }
+            break;
+            
+            
+            
+            case "L":
+                try{
+                loadProgrammData(custarray); }
+                 catch (IOException ex) {
+                    System.out.println("Data loardind completed/not");}   
+            break;
+            
+            
+            
+            case "O":orderRoomsCustName();
+            break;
+            
+            
+       
+            case "X":exit();
+            break;
+            
+            
+            }
+            }while(process!="X"||process!="X");
+            }
+            
+        
+        
+        
+        public static void viewAllRooms(){
+        int allRoom=1;
+        for(int i=0;i<custarray.length;i++){
+        if(custarray[i]!="e"){
+        System.out.println("Room No: "+ allRoom +" is reserved by "+custarray[i]);
+        }else{
+         System.out.println("Room No: "+ allRoom+" available");
+        }
+        allRoom++;
+        }
+        }
+
+        public static void DisplayEmptyRooms(){
+        int nullCount=0;
+        for(int i=0;i<custarray.length;i++){
+        if(custarray[i]=="e"){
+        System.out.println("Room No: "+(i+1)+" is Empty");
+        }else{
+        nullCount++;
+        }
+        }
+        if(nullCount==custarray.length){
+        System.err.println("All rooms are reserved");
+        }
+          System.out.println(" ");
+        }
+        
+        
+        
+        public static void findRoomCustName(){
+            
+        Scanner sc=new Scanner(System.in);    
+        String custName=sc.nextLine();
+        for(int i=0;i<custarray.length;i++){
+        if(custarray[i].equals(custName)){
+        System.out.println("Customer Name: "+custName+",  Room Number: "+(i+1));
+        }
+        }
+
+        } 
+        
+        
+        
+        public static void addCust(){
+        
+        Scanner sc=new Scanner(System.in);    
+        System.out.println("Enter the customer name: ");
+        String CustName=sc.nextLine(); 
+        System.out.println("Enter the room number: ");
+        int roomNo=sc.nextInt();
+        int i;
+        for( i=0;i<custarray.length;i++){
+
+        if(custarray[roomNo-1]=="e"){
+        custarray[roomNo-1]=CustName;
+        System.out.println(CustName+" is  added to the room No:  "+ roomNo);
+        break;
+        }else{
+        System.err.println("It's already reserved");
+        break;
+        }
+        }
+            System.out.println(" ");
+        }
+        
+        
+        
+        
+        public static void deleteCustomerFromRoom(){
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Enter the customer room number: ");
+        int room=sc.nextInt();
+        boolean istrue=true;
+        for (int i=0;i<custarray.length;i++){
+        if(i==(room-1)){
+        custarray[room-1]="e";
+          System.out.println("Customer deleted from the programm database and the room No is: "+room);
+          istrue=true;
+        break;
+
+        }else{
+        istrue=false;
+        }
+        }
+        if(istrue==false){
+        System.err.println("Didn't found the customer");
+        }
+        }
+
+        private static void init( String hotelProframmeRefer[] ) {
+        for (int x = 0; x < hotelProframmeRefer.length; x++ ){ 
+        hotelProframmeRefer[x] = "e";
+        }
+        }
+
+        
+
+        public static void storeProgrammData() throws FileNotFoundException{
+            try{
+                int roomNum=1;
+        File textFile=new File("DB.txt");    
+        PrintWriter write=new PrintWriter(textFile);
+        for(int i=0;i<custarray.length;i++){
+        if(custarray[i]=="e"){
+        write.println(roomNum+": is empty");
+        }else{
+        write.println(roomNum+": "+custarray[i]);
+        }
+        roomNum++;
+        }
+        System.out.println("Storing is completed");
+        write.close();
+            }catch(Exception e){
+            System.out.println("Storing is uncompleted");
+            }
+        }
+
+        
+        
+        public static void loadProgrammData(String hotelCW[]) throws IOException{
+        String x="";
+        int i=0;
+        String entity="";
+        String entity2="";
+        String read="";
+            try {
+                 FileReader file=new FileReader("DB.txt");
+                 BufferedReader bReader=new BufferedReader(new FileReader("DB.txt"));
+                 while((read=bReader.readLine())!=null){
+                 entity=read.substring(3);
+                 if(i==9){
+                 entity2=read.substring(4);
+                 if(entity2.equals("empty")){
+                 hotelCW[i]="e";
+                 }else{
+                 hotelCW[i]=entity2;
+                 }
+                 }else{
+                 if(entity.equals("empty")){
+                  hotelCW[i]="e";
+                 }else{
+                  hotelCW[i]=entity;
+                }
+                 }
+                 i++;}
+                
+                 System.out.println(" ");
+                 System.out.println("Data loardind completed");
+                file.close();
+                bReader.close();
+            } catch (FileNotFoundException ex) {
+               System.out.println("The file isn't available");
+            }
+        }
+
+        public static void orderRoomsCustName(){
+        Arrays.sort(custarray);
+        for(int i=0;i<custarray.length;i++){
+        if(custarray[i]!="e"){
+        System.out.println(custarray[i]);
+        }else{
+        continue;
+        }
+        }
+        }
+
+    private static void exit() {
+        System.exit(0);
+    }
+
+    }
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Question 2 - Contains 03 different classes
+
+----------------------------------------------------
+
+package hotelprogrammecwq2;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+import hotelprogrammecwq2.compareCustomerName;
+import hotelprogrammecwq2.customer;
+    
+/**
+ *
+ * @author Yasas Weerasinghe
+ */
+public class HotelProgrammeCWQ2 {
+
+        static int roomNo;
+    public static void main(String[] args) throws IOException {
+        Scanner sc=new Scanner(System.in);
+        customer[]cust=new customer[10];
+        String process="";
+        init(cust);
+        
+        do{
+        System.out.println("           * WELCOME TO HOTEL COURSE WORK *     ");
+        System.out.println("=====================================================");
+        System.out.println("");
+        System.out.println(">> Menu options << (Enter the letters to proceed)");
+        System.out.println("------------------");
+        System.out.println("A - Add customer to hotel database");
+        System.out.println("V - View all rooms");
+        System.out.println("E - View empty rooms");
+        System.out.println("D - Delete customer from room");
+        System.out.println("F - Find room by customer name");
+        System.out.println("S - Store program data in to a file");
+        System.out.println("L - Load program data from the file");
+        System.out.println("O - View rooms in ordered alphabetical name of customers");
+        System.out.println("X - Exit from the application");
+        System.out.println("-------------------------------------------------------------------");
+        System.out.println("*Use cappital letters to enter the process*");
+        System.out.print("Enter the process: ");
+        process=sc.nextLine();
+        System.out.println("------------------------------------");
+        System.out.println("");
+        
+        switch (process){
+            
+            case "A":
+             
+                System.out.println("Enter the customer name:");
+                     String custName=sc.nextLine();
+                     
+                     System.out.println("Enter the room number:");
+                     String rooms=sc.nextLine();
+                     roomNo=Integer.parseInt(rooms);
+                     addCust(cust,custName,roomNo);
+            
+            break;
+            
+            case "V":viewAllRooms(cust);
+            break;
+            
+            case "D":deleteCustomerFromRoom(cust);
+            break;
+            
+            case "E":DisplayEmptyRooms(cust);
+            break;
+            
+            case "F":findRoomCusName(cust);
+            break;
+            
+            case "S":storeProgrammData(cust);
+            break;
+            
+            case "L":loadProgrammData();
+            break;
+            
+            case "O":orderRoomsCusName(cust);
+            break;
+            
+            case "X":exit();
+            break;
+        }
+        
+        }while(process!="X"||process!="X");
+
+    }
+    
+    
+    
+            public static void addCust(customer refer[],String cust_name,int roomNo){
+            
+                for(int i=0;i<=refer.length;i++){
+                    if(refer[roomNo-1].gainCustomerName()=="E"){
+                        refer[roomNo-1].placeCustomerName(cust_name);
+                        refer[roomNo-1].placeRoomNo(roomNo);  
+                    
+                    System.out.println(cust_name+" is added to the room no: "+roomNo);
+                    System.out.println("------------------------------------");
+                    System.out.println("");
+                    break;
+                    }else
+                {
+                        System.out.println("The room has been reserved!");
+                        System.out.println("------------------------------------");
+                        System.out.println("");
+                        break;
+                        }
+        }
+            }
+            
+            
+            public static void viewAllRooms(customer refer[]){
+             
+                int room=1;
+                for(int i=0;i<refer.length;i++){
+                if(refer[i].gainCustomerName()=="E"){
+                System.out.println("Room No: " +refer[i].gainRoomNo());
+                System.out.println("------------------------------------");
+                System.out.println("");
+                }else{
+                 System.out.println("Room  "+refer[i].gainRoomNo()+" has been reserved by "+refer[i].gainCustomerName());
+                 System.out.println("------------------------------------");
+                System.out.println("");
+                }
+                 room++;
+                }}
+
+            
+            
+            public static void deleteCustomerFromRoom(customer refer[]){
+             Scanner sc=new Scanner(System.in);
+                System.out.println("Enter the customer room number: ");
+                System.out.println("------------------------------------");
+                System.out.println("");
+                int room=sc.nextInt();
+                
+                for(int i=0;i<refer.length;i++){
+                if(i==(room-1)){
+                refer[i].placeCustomerName("E");
+                }
+                }
+                System.out.println("Customer deleted from the programm database");
+                System.out.println("------------------------------------");
+                System.out.println("");
+     }
+            
+            
+            
+            public static void DisplayEmptyRooms(customer refer[]){
+             int room=1;
+              for(int i=0;i<refer.length;i++){
+              if(refer[i].gainCustomerName()=="E"){
+              System.out.println("Room no: "+room+" is empty");
+              System.out.println("------------------------------------");
+              System.out.println("");
+              }
+              room++;
+     }
+     }
+
+            
+            public static void findRoomCusName(customer refer[]){
+             Scanner sc=new Scanner(System.in);
+             String custName=sc.nextLine();
+            
+             int i=0;
+             int room=i+1;
+             for(;i<refer.length;i++){
+             if(refer[i].gainCustomerName().equals(custName)){
+             System.out.println("Room no:"+room+" customer: "+refer[i].gainCustomerName());
+             System.out.println("------------------------------------");
+             System.out.println("");
+             break;
+             }
+             room++;
+     }
+     }          
+            
+            
+            
+            public static void storeProgrammData(customer refer[]){
+                Scanner sc=new Scanner(System.in);
+                System.out.println("Enter a file name");
+                String file=sc.nextLine();
+                System.out.println("------------------------------------");
+                System.out.println("");
+                
+                int room=1;
+                File custFile=new File(file+".txt");
+                try {
+                PrintWriter storeProData=new PrintWriter(new File(file+".txt"));
+                for(int i=0;i<refer.length;i++){
+                if(refer[i].gainCustomerName().equals("e")){
+                storeProData.println(room+". empty");
+                }
+                else{
+                storeProData.println(room+". "+refer[i].gainCustomerName());
+                }
+                room++;
+                }
+                System.out.println("Storing is completed");
+                System.out.println("------------------------------------");
+                System.out.println("");
+                storeProData.close();
+                } 
+                catch (FileNotFoundException ex) {
+                System.err.println("Storing is uncompleted");
+                System.out.println("------------------------------------");
+                System.out.println("");
+        }
+     }
+                
+                
+             
+            public static void loadProgrammData() throws FileNotFoundException, IOException{
+            Scanner sc=new Scanner(System.in);
+            System.out.print("Enter the file name: ");
+            String file=sc.nextLine();
+            System.out.println("------------------------------------");
+            System.out.println("");
+            
+            FileReader fileReader=new FileReader(file+".txt");
+            String line="";
+            String txt=null;
+            try {
+            BufferedReader bReader=new BufferedReader(new FileReader(file+".txt"));
+            while((txt=bReader.readLine())!=null){
+            line=line+"\n "+txt;
+            }
+            System.out.println(line);
+            System.out.println("Data loardind completed");
+            System.out.println("------------------------------------");
+            System.out.println("");
+            bReader.close();
+            fileReader.close();
+            } catch (FileNotFoundException ex) {
+            System.err.println("The file isn't available");
+            System.out.println("------------------------------------");
+            System.out.println("");
+        }  
+        }
+    
+    
+            public static void orderRoomsCusName(customer refer[]){
+             Arrays.sort(refer,new compareCustomerName());
+
+            for(int i=0;i<refer.length;i++){
+            if(refer[i].gainCustomerName().equals("E")){
+            }else
+            {
+            System.out.println("Room No: "+ refer[i].gainRoomNo()+" customer name: "+refer[i].gainCustomerName());
+            }
+  
+            }
+            System.out.println("------------------------------------");
+            System.out.println("");
+}
+     
+     
+
+           
+            public static void exit(){
+                
+            System.exit(0);
+            
+}
+            private static void init(customer refer[] ) {
+            for (int x = 0; x < refer.length; x++ ){ 
+            refer[x]=new customer();
+            refer[x].placeCustomerName("E"); 
+            refer[x].placeRoomNo(x+1);
+    }
+    }
+    
+}
+
+
+----------------------------------------------------------------------------------
+
+package hotelprogrammecwq2;
+
+import java.util.Comparator;
+
+
+/**
+ *
+ * @author Yasas Weerasingh
+ */
+public class compareCustomerName implements Comparator<customer>{
+    
+    public int compare(customer o1, customer o2) {
+        return o1.gainCustomerName().compareTo(o2.gainCustomerName());
+    }
+}
+
+
+--------------------------------------------------------------------------------------
+
+
+package hotelprogrammecwq2;
+
+/**
+ *
+ * @author Yasas Weerasingh
+ */
+public class customer {
+private String custName;
+private int roomNo;
+    
+public customer(){
+    
+}
+
+public customer(String customerName, int roomNo){
+    this.custName=customerName;
+    this.roomNo=roomNo;
+}
+
+public void placeCustomerName(String Name){
+    this.custName=Name;
+}
+public String gainCustomerName(){
+    return custName;
+}
+public void placeRoomNo(int room){
+    this.roomNo=room;
+}
+public int gainRoomNo(){
+    return roomNo;
+}
+}
